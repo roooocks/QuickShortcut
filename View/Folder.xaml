@@ -1,0 +1,14 @@
+﻿<Window x:Class="QuickShortcut.Folder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuickShortcut"
+        mc:Ignorable="d"
+        Title="Folder" Height="450" Width="800">
+    <Grid>
+        <TextBlock Name="print_data" Margin="0,0,0,410" Text="test" />
+
+        <Button Content="*.exe" Width="50" Height="50" Click="Button_Click" />
+    </Grid>
+</Window>

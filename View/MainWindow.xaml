@@ -1,0 +1,105 @@
+﻿<Window x:Class="QuickShortcut.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuickShortcut"
+        xmlns:c="clr-namespace:QuickShortcut.ModelView.Converter"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        mc:Ignorable="d"
+        Title="ShortCut" WindowStyle="None" ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        AllowsTransparency="True" Background="Transparent"
+        Loaded="Window_Loaded"
+        SizeChanged="Window_SizeChanged">
+    <Window.Resources>
+        <!-- DataContext가 연동이 안되므로, 코드를 개선할 때 이쪽에서 DataContext를 받아온다. -->
+        
+        <!-- Window에 있는 Loded나 Button의 Command같은 이벤트들은 아래 링크와 같은 방식으로 해야 MVVM, MVC코드가 어지럽혀지지 않는다. -->
+        <!--
+            Behavior 개념 사용
+            https://stpetrus27.wordpress.com/2019/02/12/c-wpf-mvvm-microsoft-xaml-behaviors-and-eventtrigger-1/ 
+        -->
+        
+        <!-- 처음 쓰면 에러가 걸리는데, 솔루션 빌드 해주면 해결된다. -->
+        <c:MultiParamConverter x:Key="MultiParamConverter" />
+
+        <DataTemplate x:Key="shortcut">
+            <!--
+                RelativeSource
+                    - https://jandari91.github.io/posts/wpf-RelativeSource/
+                    - Binding할 객체를 찾아주는 속성이다.
+                    - AncestorType은 자신의 부모 속성에서 찾겠다는 의미이다.
+            -->
+            <Button x:Name="shortcutBtn"
+                    Margin="10"
+                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}, Path=DataContext.ShortCutCommand}">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding Icon}" Width="50" Height="50" Cursor="Hand" />
+                    </ControlTemplate>
+                </Button.Template>
+                
+                <!-- 멀티 파라미터는 컨버터가 필요하다 -->
+                <!-- 컨버터 정보 => https://stackoverflow.com/questions/1350598/passing-two-command-parameters-using-a-wpf-binding -->
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource MultiParamConverter}">
+                        <Binding Path="Type" />
+                        <Binding Path="test" />
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Border Background="White"
+            CornerRadius="10"
+            BorderThickness="0">
+        <DockPanel LastChildFill="False">
+            <Button DockPanel.Dock="Left"
+                    Command="{Binding LeftRightCommand}"
+                    CommandParameter="Left">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Image/UI/left-arrow.png" Width="30" Height="80" Cursor="Hand" />
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <ItemsControl ItemsSource="{Binding ShortCuts}"
+                          ItemTemplate="{StaticResource shortcut}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding LeftRightCommand}"
+                    CommandParameter="Right">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Width="30" Height="80" Source="/Image/UI/right-arrow.png" Cursor="Hand" />
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <!-- NotifyIcon 관련 -->
+            <!-- 나중에 ResourceDictionary로 이동시키기 -->
+            <tb:TaskbarIcon
+                IconSource="/Image/icon/test.png"
+                MenuActivation="RightClick"
+                ToolTipText="숏컷 작동중!">
+                <tb:TaskbarIcon.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="설정" Command="{Binding AppSettingCommand}" />
+                        <MenuItem Header="닫기" Command="{Binding AppExitCommand}" />
+                        <Separator />
+                        <MenuItem Header="앱 정보" />
+                    </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+            </tb:TaskbarIcon>
+        </DockPanel>
+    </Border>
+</Window>

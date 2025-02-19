@@ -1,0 +1,11 @@
+# 해당 프로그램에서 사용하는 숏컷의 종류는 3가지 입니다. 앱/폴더/자체 폴더
+# 앱/폴더는 "번호|경로", 자체 폴더는 "번호|자체 폴더 이름" 방식으로 메모장에 저장됩니다.
+# 앱/폴더/자체 폴더 모두 마지막 세번째에는 아이콘을 저장합니다. (처음 생성 시에는 기본 아이콘으로 지정하므로 필요X)
+# 앱은 1, 폴더는 2, 자체 폴더의 경우 3을 번호로 가집니다.
+2|C:\Memo\계정
+2|C:\Game Resource\Mika Team\Grils Frontline\Android\New
+1|C:\Game Resource\Tools\HxD\HxD.exe
+3|중요 메모
+3|솔로/멀티 게임
+1|C:\Memo\계정\Github.txt
+2|C:\Programming\Study\React\pratice
